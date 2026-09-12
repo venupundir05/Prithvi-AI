@@ -1,0 +1,88 @@
+/* ==========================================================================
+   PRITHVI AI — Design tokens
+   A field-instrument aesthetic: dark operations-room background, one signal
+   color (teal) for "system is watching", amber/red reserved strictly for
+   escalating risk so they keep their meaning, monospace for live readouts.
+   ========================================================================== */
+
+:root{
+  /* --- Core palette --- */
+  --bg:        #0a0e16;
+  --bg-raised: #10151f;
+  --bg-panel:  #141b28;
+  --bg-panel-2:#1a2332;
+  --border:    #253046;
+  --border-soft:#1c2536;
+
+  --text:      #e7ecf5;
+  --text-dim:  #93a0b8;
+  --text-faint:#5c6884;
+
+  --signal:    #2fd9c4;   /* teal — nominal / system alive */
+  --signal-dim:#1a5c53;
+  --warn:      #f2a93b;   /* amber — warning tier */
+  --danger:    #f0555c;   /* red — critical tier */
+  --safe:      #45cb85;   /* green — normal / all-clear */
+  --water:     #4f8ef7;   /* flood-specific accent */
+  --fire:      #ff7a45;   /* fire-specific accent */
+  --smog:      #b78ce0;   /* pollution-specific accent */
+
+  /* --- Type --- */
+  --font-head: "Segoe UI Semibold","Century Gothic","Arial Narrow",system-ui,sans-serif;
+  --font-body: "Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-mono: "Cascadia Mono","SFMono-Regular",Consolas,"Courier New",monospace;
+
+  /* --- Layout --- */
+  --radius-sm: 3px;
+  --radius: 6px;
+  --nav-w: 240px;
+  --header-h: 60px;
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Faint scanline / grid texture on the base background only */
+body{
+  background-image:
+    linear-gradient(180deg, rgba(47,217,196,0.03), transparent 240px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px);
+}
+
+h1,h2,h3,h4{
+  font-family:var(--font-head);
+  margin:0 0 4px 0;
+  font-weight:700;
+  letter-spacing:0.2px;
+}
+
+a{ color:inherit; }
+button{ font-family:var(--font-body); }
+
+::selection{ background:var(--signal-dim); color:#fff; }
+
+/* Scrollbars — quiet, instrument-panel feel */
+::-webkit-scrollbar{ width:10px; height:10px; }
+::-webkit-scrollbar-track{ background:var(--bg-raised); }
+::-webkit-scrollbar-thumb{ background:var(--border); border-radius:6px; }
+::-webkit-scrollbar-thumb:hover{ background:var(--text-faint); }
+
+.hidden{ display:none !important; }
+
+:focus-visible{
+  outline:2px solid var(--signal);
+  outline-offset:2px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+}

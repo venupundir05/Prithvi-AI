@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRITHVI AI — Environmental Monitoring &amp; Disaster Response Training</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/views.css">
+<link rel="stylesheet" href="css/games.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ============ BRAND ============ -->
+  <div class="brand">
+    <div class="brand-mark"></div>
+    <div class="brand-text">
+      <div class="name">PRITHVI AI</div>
+      <div class="tagline">Sense. Predict. Alert. Respond.</div>
+    </div>
+  </div>
+
+  <!-- ============ TOP BAR ============ -->
+  <div class="topbar">
+    <div class="topbar-status">
+      <span id="global-status-pill" class="status-pill safe"><span class="dot"></span><span id="global-status-text">ALL SYSTEMS NORMAL</span></span>
+      <span class="topbar-clock" id="topbar-clock">--:--:--</span>
+    </div>
+    <div class="demo-toggle">
+      <span id="demo-label">Demo Mode: <strong>OFF</strong></span>
+      <button class="switch" id="demo-switch" aria-label="Toggle demo mode"></button>
+    </div>
+  </div>
+
+  <!-- ============ SIDE NAV ============ -->
+  <nav class="side-nav" id="side-nav">
+    <button class="nav-link active" data-view="dashboard">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-link" data-view="monitoring">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12h4l2-7 4 14 2-9 2 4h4"/></svg>
+      Live Monitoring
+    </button>
+    <button class="nav-link" data-view="warnings">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="0.8" fill="currentColor"/></svg>
+      Early Warnings
+    </button>
+    <div class="nav-sep"></div>
+    <button class="nav-link" data-view="drills">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 21V9l7-6 7 6v12"/><path d="M9 21v-6h6v6"/></svg>
+      Disaster Drills
+    </button>
+    <button class="nav-link" data-view="academy">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="14" height="10" rx="1.5"/><path d="M21 7v6l-4-3 4-3Z"/></svg>
+      Training Videos
+    </button>
+    <button class="nav-link" data-view="quiz">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-2.2 2-2.2 4"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>
+      Quizzes
+    </button>
+    <button class="nav-link" data-view="performance">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 12l4-3"/></svg>
+      Performance
+    </button>
+    <div class="nav-foot">PRITHVI AI · SIH Prototype<br>Edge-AI Early Warning System</div>
+  </nav>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main" id="main-content">
+
+    <!-- ============================================================ -->
+    <!-- DASHBOARD                                                     -->
+    <!-- ============================================================ -->
+    <section class="view active" id="view-dashboard">
+      <div class="view-head">
+        <div>
+          <h1>Environmental Intelligence Dashboard</h1>
+          <div class="sub">Real-time fusion of flood, forest-fire and pollution sensor streams into a single early-warning risk score.</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-ghost btn-sm" id="dash-refresh">Refresh readings</button>
+        </div>
+      </div>
+
+      <div class="risk-strip">
+        <div>
+          <div class="rs-sub">OVERALL SYSTEM RISK</div>
+          <div class="rs-level" id="overall-risk-level">Normal</div>
+        </div>
+        <div style="flex:1">
+          <div class="risk-track" id="risk-track">
+            <div class="seg-normal"></div><div class="seg-warning dim"></div><div class="seg-high dim"></div><div class="seg-critical dim"></div>
+          </div>
+          <div class="risk-labels"><span>NORMAL</span><span>WARNING</span><span>HIGH RISK</span><span>CRITICAL</span></div>
+        </div>
+      </div>
+
+      <div class="grid grid-3" id="hazard-card-grid">
+        <!-- Flood card -->
+        <div class="hazard-card" data-hazard="flood" style="--card-accent:var(--water)">
+          <div class="hc-head">
+            <div class="hc-title"><svg class="hc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 15c1.5 1.5 3 1.5 4.5 0s3-1.5 4.5 0 3 1.5 4.5 0 3-1.5 4.5 0"/><path d="M2 19c1.5 1.5 3 1.5 4.5 0s3-1.5 4.5 0 3 1.5 4.5 0 3-1.5 4.5 0"/><path d="M12 3v9"/></svg>Flood</div>
+            <span class="hc-level normal" data-level>NORMAL</span>
+          </div>
+          <div class="hc-metrics">
+            <div class="hc-metric"><div class="m-label">Water level</div><div class="m-value" data-m="waterLevel">1.2<span class="m-unit">m</span></div></div>
+            <div class="hc-metric"><div class="m-label">Rainfall</div><div class="m-value" data-m="rainfall">4<span class="m-unit">mm/h</span></div></div>
+            <div class="hc-metric"><div class="m-label">Rate of rise</div><div class="m-value" data-m="riseRate">0.02<span class="m-unit">m/h</span></div></div>
+            <div class="hc-metric"><div class="m-label">Flow rate</div><div class="m-value" data-m="flowRate">18<span class="m-unit">m³/s</span></div></div>
+          </div>
+          <canvas class="spark" data-spark="flood"></canvas>
+          <div class="hc-bar-track"><div class="hc-bar-fill" data-fill></div></div>
+          <div class="hc-foot"><span>Risk score</span><span class="trend flat" data-trend>steady</span></div>
+        </div>
+        <!-- Fire card -->
+        <div class="hazard-card" data-hazard="fire" style="--card-accent:var(--fire)">
+          <div class="hc-head">
+            <div class="hc-title"><svg class="hc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2c1 3-2 4-2 7a4 4 0 0 0 8 0c0-2-1-3-1-3s1 4-1 4-1-3-2-5c-1 2-2 2-2-3Z"/></svg>Forest Fire</div>
+            <span class="hc-level normal" data-level>NORMAL</span>
+          </div>
+          <div class="hc-metrics">
+            <div class="hc-metric"><div class="m-label">Temperature</div><div class="m-value" data-m="temperature">29<span class="m-unit">°C</span></div></div>
+            <div class="hc-metric"><div class="m-label">Humidity</div><div class="m-value" data-m="humidity">48<span class="m-unit">%</span></div></div>
+            <div class="hc-metric"><div class="m-label">Smoke density</div><div class="m-value" data-m="smoke">6<span class="m-unit">%</span></div></div>
+            <div class="hc-metric"><div class="m-label">Wind speed</div><div class="m-value" data-m="wind">9<span class="m-unit">km/h</span></div></div>
+          </div>
+          <canvas class="spark" data-spark="fire"></canvas>
+          <div class="hc-bar-track"><div class="hc-bar-fill" data-fill></div></div>
+          <div class="hc-foot"><span>Risk score</span><span class="trend flat" data-trend>steady</span></div>
+        </div>
+        <!-- Pollution card -->
+        <div class="hazard-card" data-hazard="pollution" style="--card-accent:var(--smog)">
+          <div class="hc-head">
+            <div class="hc-title"><svg class="hc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="8" r="1.4"/><circle cx="11" cy="6" r="1.4"/><circle cx="16" cy="9" r="1.4"/><path d="M3 15h18M3 19h13"/></svg>Pollution</div>
+            <span class="hc-level normal" data-level>NORMAL</span>
+          </div>
+          <div class="hc-metrics">
+            <div class="hc-metric"><div class="m-label">AQI</div><div class="m-value" data-m="aqi">62</div></div>
+            <div class="hc-metric"><div class="m-label">PM2.5</div><div class="m-value" data-m="pm25">28<span class="m-unit">µg/m³</span></div></div>
+            <div class="hc-metric"><div class="m-label">PM10</div><div class="m-value" data-m="pm10">55<span class="m-unit">µg/m³</span></div></div>
+            <div class="hc-metric"><div class="m-label">Visibility</div><div class="m-value" data-m="visibility">6.4<span class="m-unit">km</span></div></div>
+          </div>
+          <canvas class="spark" data-spark="pollution"></canvas>
+          <div class="hc-bar-track"><div class="hc-bar-fill" data-fill></div></div>
+          <div class="hc-foot"><span>Risk score</span><span class="trend flat" data-trend>steady</span></div>
+        </div>
+      </div>
+
+      <h2 style="margin-top:26px;font-size:16px;">Active Early-Warning Alerts</h2>
+      <div class="warn-list" id="dash-alert-list">
+        <div class="panel" style="color:var(--text-dim);font-size:13px;">No active alerts. All monitored zones are within normal parameters.</div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- LIVE MONITORING                                               -->
+    <!-- ============================================================ -->
+    <section class="view" id="view-monitoring">
+      <div class="view-head">
+        <div>
+          <h1>Live Sensor Monitoring</h1>
+          <div class="sub">Rolling 60-sample window per hazard channel. Enable Demo Mode from the top bar to see live drift, spikes and recovery.</div>
+        </div>
+      </div>
+      <div class="grid grid-3">
+        <div class="panel chart-panel">
+          <div class="cp-head"><h3>Flood — Water Level &amp; Rainfall</h3><span class="tag flood">FLOOD</span></div>
+          <canvas class="bigchart" id="chart-flood"></canvas>
+          <div class="legend-row"><span class="lg"><span class="sw" style="background:var(--water)"></span>Water level (m)</span><span class="lg"><span class="sw" style="background:var(--signal)"></span>Rainfall (mm/h)</span></div>
+        </div>
+        <div class="panel chart-panel">
+          <div class="cp-head"><h3>Fire — Temperature &amp; Smoke</h3><span class="tag fire">FIRE</span></div>
+          <canvas class="bigchart" id="chart-fire"></canvas>
+          <div class="legend-row"><span class="lg"><span class="sw" style="background:var(--fire)"></span>Temp (°C)</span><span class="lg"><span class="sw" style="background:var(--warn)"></span>Smoke (%)</span></div>
+        </div>
+        <div class="panel chart-panel">
+          <div class="cp-head"><h3>Pollution — AQI &amp; PM2.5</h3><span class="tag pollution">POLLUTION</span></div>
+          <canvas class="bigchart" id="chart-pollution"></canvas>
+          <div class="legend-row"><span class="lg"><span class="sw" style="background:var(--smog)"></span>AQI</span><span class="lg"><span class="sw" style="background:var(--danger)"></span>PM2.5</span></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:16px;">
+        <h3 style="font-size:13.5px;margin-bottom:10px;">Raw Sensor Feed (latest sample)</h3>
+        <table class="data-table" id="raw-feed-table">
+          <thead><tr><th>Channel</th><th>Node ID</th><th>Value</th><th>Status</th><th>Last update</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- EARLY WARNINGS                                                -->
+    <!-- ============================================================ -->
+    <section class="view" id="view-warnings">
+      <div class="view-head">
+        <div>
+          <h1>Early Warning Center</h1>
+          <div class="sub">Every alert includes affected area, current conditions, trend direction, recommended action, and the nearest safe zone.</div>
+        </div>
+      </div>
+      <div class="warn-list" id="warnings-full-list"></div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- DISASTER DRILL HUB                                            -->
+    <!-- ============================================================ -->
+    <section class="view" id="view-drills">
+      <div class="drill-hero">
+        <div class="eyebrow">PRITHVI AI — DISASTER RESPONSE TRAINING CENTER</div>
+        <h1>Don't just know what to do. Practice it.</h1>
+        <p>Three playable survival scenarios. Move, choose routes, manage hazards, and reach safety before conditions turn critical. Every decision is timed and scored.</p>
+      </div>
+      <div class="game-select-grid">
+        <div class="mod-card">
+          <div class="mod-band" style="background:var(--water)"></div>
+          <div class="mod-body">
+            <h3>Rising Waters</h3>
+            <p>Flood evacuation. Water rises in real time — pick a route to high ground before roads flood and hazards close in.</p>
+            <div class="mod-meta"><span class="tag flood">FLOOD</span><span>~2–3 min</span></div>
+            <button class="btn btn-primary" data-open-game="flood">Start Drill</button>
+          </div>
+        </div>
+        <div class="mod-card">
+          <div class="mod-band" style="background:var(--fire)"></div>
+          <div class="mod-body">
+            <h3>Escape the Fire</h3>
+            <p>Forest fire evacuation. Wind shifts, fire spreads, smoke cuts visibility. Grab gear and get clear of the treeline.</p>
+            <div class="mod-meta"><span class="tag fire">FOREST FIRE</span><span>~2–3 min</span></div>
+            <button class="btn btn-primary" data-open-game="fire">Start Drill</button>
+          </div>
+        </div>
+        <div class="mod-card">
+          <div class="mod-band" style="background:var(--smog)"></div>
+          <div class="mod-body">
+            <h3>Beat the AQI</h3>
+            <p>Urban pollution exposure. Cross a smog-choked city, avoid emission hot-zones, and reach clean-air shelter with a mask.</p>
+            <div class="mod-meta"><span class="tag pollution">POLLUTION</span><span>~2–3 min</span></div>
+            <button class="btn btn-primary" data-open-game="pollution">Start Drill</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- GAME SCREENS (one shared shell, engine swaps the scenario)    -->
+    <!-- ============================================================ -->
+    <section class="view" id="view-game">
+      <div class="view-head">
+        <div>
+          <h1 id="game-title">Drill</h1>
+          <div class="sub" id="game-subtitle">Objective</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" data-back-to-drills>← Back to Drills</button>
+      </div>
+
+      <div class="game-hud" id="game-hud">
+        <div class="hud-chip timer"><span class="hc-lab">TIME</span><span class="hc-val" id="hud-time">0:00</span></div>
+        <div class="hud-chip health"><span class="hc-lab" id="hud-health-label">HEALTH</span><span class="hc-val" id="hud-health">100%</span></div>
+        <div class="hud-chip score"><span class="hc-lab">SCORE</span><span class="hc-val" id="hud-score">0</span></div>
+        <div class="hud-chip"><span class="hc-lab">ZONE</span><span class="hc-val" id="hud-zone">Start</span></div>
+        <div class="hud-inventory" id="hud-inventory"></div>
+      </div>
+
+      <div class="game-stage-wrap">
+        <canvas id="game-canvas" width="800" height="480"></canvas>
+        <div class="game-overlay hidden" id="game-overlay">
+          <h2 id="overlay-title">Paused</h2>
+          <p id="overlay-text"></p>
+          <div class="btn-row">
+            <button class="btn btn-primary" id="overlay-primary-btn">Start</button>
+            <button class="btn btn-ghost" data-back-to-drills>Back to Drills</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-controls-hint">
+        <span><span class="kbd">W</span><span class="kbd">A</span><span class="kbd">S</span><span class="kbd">D</span> or arrow keys to move</span>
+        <span><span class="kbd">E</span> to interact with items / evacuation points</span>
+        <span><span class="kbd">P</span> to pause</span>
+      </div>
+
+      <div class="panel postgame-panel hidden" id="postgame-panel">
+        <h2 id="postgame-heading">Drill Complete</h2>
+        <div class="postgame-stats">
+          <div class="pg-stat"><div class="v" id="pg-time">0:00</div><div class="l">Response Time</div></div>
+          <div class="pg-stat"><div class="v" id="pg-health">0%</div><div class="l">Health Remaining</div></div>
+          <div class="pg-stat"><div class="v" id="pg-items">0</div><div class="l">Items Collected</div></div>
+          <div class="pg-stat"><div class="v" id="pg-score">0</div><div class="l">Final Score</div></div>
+        </div>
+        <h3 style="font-size:13.5px;">Safety Feedback</h3>
+        <ul class="tip-list" id="pg-tips"></ul>
+        <div class="btn-row" style="margin-top:14px;">
+          <button class="btn btn-primary" id="pg-retry">Retry Drill</button>
+          <button class="btn btn-ghost" data-back-to-drills>Back to Drills</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TRAINING VIDEOS / ACADEMY                                     -->
+    <!-- ============================================================ -->
+    <section class="view" id="view-academy">
+      <div class="view-head">
+        <div>
+          <h1>PRITHVI AI — Disaster Safety Academy</h1>
+          <div class="sub">Short animated safety briefings for each hazard: what's happening, why it's dangerous, and exactly what to do.</div>
+        </div>
+      </div>
+      <div class="game-select-grid" id="academy-select-grid">
+        <div class="mod-card"><div class="mod-band" style="background:var(--water)"></div>
+          <div class="mod-body"><h3>Flood Safety</h3><p>Reading rising water, safe evacuation timing, and what to avoid.</p>
+          <div class="mod-meta"><span class="tag flood">FLOOD</span><span>4 steps</span></div>
+          <button class="btn btn-primary" data-open-academy="flood">Watch Module</button></div>
+        </div>
+        <div class="mod-card"><div class="mod-band" style="background:var(--fire)"></div>
+          <div class="mod-body"><h3>Forest Fire Safety</h3><p>Fire behaviour, wind risk, and clearing the danger zone in time.</p>
+          <div class="mod-meta"><span class="tag fire">FOREST FIRE</span><span>4 steps</span></div>
+          <button class="btn btn-primary" data-open-academy="fire">Watch Module</button></div>
+        </div>
+        <div class="mod-card"><div class="mod-band" style="background:var(--smog)"></div>
+          <div class="mod-body"><h3>Pollution Safety</h3><p>AQI thresholds, exposure reduction, and when to shelter indoors.</p>
+          <div class="mod-meta"><span class="tag pollution">POLLUTION</span><span>4 steps</span></div>
+          <button class="btn btn-primary" data-open-academy="pollution">Watch Module</button></div>
+        </div>
+      </div>
+
+      <div class="panel hidden" id="academy-player" style="margin-top:20px;">
+        <div class="view-head" style="margin-bottom:12px;">
+          <h2 id="academy-player-title" style="font-size:17px;">Module</h2>
+          <button class="btn btn-ghost btn-sm" id="academy-close">✕ Close</button>
+        </div>
+        <div class="video-frame"><canvas id="academy-canvas" width="640" height="360"></canvas></div>
+        <div class="video-controls">
+          <button class="btn btn-sm" id="academy-play">▶ Play</button>
+          <div class="vc-progress" id="academy-progress"><div id="academy-progress-fill"></div></div>
+          <span style="font-family:var(--font-mono);font-size:12px;color:var(--text-dim)" id="academy-step-count">1 / 4</span>
+        </div>
+        <div class="step-list" id="academy-step-list"></div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- QUIZ CENTER                                                   -->
+    <!-- ============================================================ -->
+    <section class="view" id="view-quiz">
+      <div class="view-head">
+        <div>
+          <h1>Quiz Center</h1>
+          <div class="sub">Scenario-based knowledge tests. Games are practice — this is the test.</div>
+        </div>
+      </div>
+
+      <div class="game-select-grid" id="quiz-select-grid">
+        <div class="mod-card"><div class="mod-band" style="background:var(--water)"></div>
+          <div class="mod-body"><h3>Flood Quiz</h3><p>Scenario questions on evacuation timing, safe routes and water hazards.</p>
+          <div class="mod-meta"><span class="tag flood">FLOOD</span><span>5 questions</span></div>
+          <button class="btn btn-primary" data-open-quiz="flood">Take Quiz</button></div>
+        </div>
+        <div class="mod-card"><div class="mod-band" style="background:var(--fire)"></div>
+          <div class="mod-body"><h3>Forest Fire Quiz</h3><p>Scenario questions on fire spread, wind and evacuation decisions.</p>
+          <div class="mod-meta"><span class="tag fire">FOREST FIRE</span><span>5 questions</span></div>
+          <button class="btn btn-primary" data-open-quiz="fire">Take Quiz</button></div>
+        </div>
+        <div class="mod-card"><div class="mod-band" style="background:var(--smog)"></div>
+          <div class="mod-body"><h3>Pollution Quiz</h3><p>Scenario questions on AQI, exposure and protective action.</p>
+          <div class="mod-meta"><span class="tag pollution">POLLUTION</span><span>5 questions</span></div>
+          <button class="btn btn-primary" data-open-quiz="pollution">Take Quiz</button></div>
+        </div>
+      </div>
+
+      <div class="quiz-shell hidden" id="quiz-player" style="margin-top:22px;">
+        <div class="panel" id="quiz-question-panel">
+          <div class="quiz-progress" id="quiz-progress">Question 1 / 5</div>
+          <div class="quiz-q" id="quiz-question-text"></div>
+          <div class="quiz-opts" id="quiz-options"></div>
+          <div class="quiz-explain hidden" id="quiz-explain"></div>
+          <div class="btn-row" style="margin-top:16px;justify-content:flex-end;">
+            <button class="btn btn-primary hidden" id="quiz-next">Next Question</button>
+          </div>
+        </div>
+        <div class="panel hidden" id="quiz-result-panel">
+          <h2 id="quiz-result-heading">Quiz Complete</h2>
+          <div class="quiz-result-grid">
+            <div class="pg-stat"><div class="v" id="quiz-score">0/5</div><div class="l">Score</div></div>
+            <div class="pg-stat"><div class="v" id="quiz-accuracy">0%</div><div class="l">Accuracy</div></div>
+            <div class="pg-stat"><div class="v" id="quiz-weak-topic">—</div><div class="l">Needs Review</div></div>
+          </div>
+          <ul class="tip-list" id="quiz-recommendations"></ul>
+          <div class="btn-row" style="margin-top:14px;">
+            <button class="btn btn-primary" id="quiz-retry">Retake Quiz</button>
+            <button class="btn btn-ghost" id="quiz-back">Back to Quiz Center</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PERFORMANCE ANALYTICS                                         -->
+    <!-- ============================================================ -->
+    <section class="view" id="view-performance">
+      <div class="view-head">
+        <div>
+          <h1>PRITHVI AI — Preparedness Score</h1>
+          <div class="sub">Aggregated from your drill runs and quiz results across all three hazards.</div>
+        </div>
+      </div>
+
+      <div class="panel score-hero">
+        <div class="ring-wrap">
+          <canvas id="prep-ring" width="120" height="120"></canvas>
+          <div>
+            <div class="ring-num" id="prep-overall">0%</div>
+            <div style="color:var(--text-dim);font-size:12.5px;">Overall preparedness</div>
+          </div>
+        </div>
+        <div class="grid grid-3" style="flex:1;min-width:280px;">
+          <div class="panel" style="padding:12px;"><div style="font-size:11px;color:var(--text-dim)">FLOOD</div><div class="ring-num" id="prep-flood" style="font-size:20px;">0%</div></div>
+          <div class="panel" style="padding:12px;"><div style="font-size:11px;color:var(--text-dim)">FOREST FIRE</div><div class="ring-num" id="prep-fire" style="font-size:20px;">0%</div></div>
+          <div class="panel" style="padding:12px;"><div style="font-size:11px;color:var(--text-dim)">POLLUTION</div><div class="ring-num" id="prep-pollution" style="font-size:20px;">0%</div></div>
+        </div>
+      </div>
+
+      <div class="grid grid-2" style="margin-top:16px;align-items:start;">
+        <div class="panel">
+          <h3 style="font-size:13.5px;">Skill Breakdown</h3>
+          <div class="skill-row"><div class="sk-label">Response time</div><div class="sk-track"><div class="sk-fill" id="skill-response"></div></div><div class="sk-val" id="skill-response-val">0%</div></div>
+          <div class="skill-row"><div class="sk-label">Decision making</div><div class="sk-track"><div class="sk-fill" id="skill-decision"></div></div><div class="sk-val" id="skill-decision-val">0%</div></div>
+          <div class="skill-row"><div class="sk-label">Route selection</div><div class="sk-track"><div class="sk-fill" id="skill-route"></div></div><div class="sk-val" id="skill-route-val">0%</div></div>
+          <div class="skill-row"><div class="sk-label">Hazard awareness</div><div class="sk-track"><div class="sk-fill" id="skill-hazard"></div></div><div class="sk-val" id="skill-hazard-val">0%</div></div>
+          <div class="skill-row"><div class="sk-label">Safety knowledge</div><div class="sk-track"><div class="sk-fill" id="skill-knowledge"></div></div><div class="sk-val" id="skill-knowledge-val">0%</div></div>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:13.5px;">Achievements</h3>
+          <div class="badge-grid" id="badge-grid"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:16px;">
+        <h3 style="font-size:13.5px;">Training Recommendations</h3>
+        <ul class="tip-list" id="perf-recommendations"><li>Complete drills and quizzes to generate personalised recommendations.</li></ul>
+      </div>
+
+      <div class="panel" style="margin-top:16px;">
+        <div class="view-head" style="margin-bottom:0;">
+          <h3 style="font-size:13.5px;">Session History</h3>
+          <button class="btn btn-ghost btn-sm" id="perf-reset">Reset Progress</button>
+        </div>
+        <table class="data-table" id="history-table" style="margin-top:10px;">
+          <thead><tr><th>Activity</th><th>Hazard</th><th>Result</th><th>Score</th><th>When</th></tr></thead>
+          <tbody><tr><td colspan="5" style="color:var(--text-dim)">No activity yet.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div id="toast-stack"></div>
+
+<script src="js/state.js"></script>
+<script src="js/content.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/sensors.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/monitoring.js"></script>
+<script src="js/warnings.js"></script>
+<script src="js/game-engine.js"></script>
+<script src="js/game-flood.js"></script>
+<script src="js/game-fire.js"></script>
+<script src="js/game-pollution.js"></script>
+<script src="js/drills.js"></script>
+<script src="js/academy.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/performance.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
