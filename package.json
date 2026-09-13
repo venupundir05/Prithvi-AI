@@ -1,0 +1,13 @@
+{
+  "name": "prithvi-ai",
+  "version": "1.0.0",
+  "homepage": "https://venupundir05.github.io/Prithvi-AI",
+  "scripts": {
+    "deploy": "gh-pages -d ."
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
+}
+  
+
