@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/views.css">
 <link rel="stylesheet" href="css/games.css">
+<link rel="stylesheet" href="css/drills-visual.css">
 </head>
 <body>
 
@@ -329,19 +330,9 @@
         </div>
       </div>
 
-      <div class="panel hidden" id="academy-player" style="margin-top:20px;">
-        <div class="view-head" style="margin-bottom:12px;">
-          <h2 id="academy-player-title" style="font-size:17px;">Module</h2>
-          <button class="btn btn-ghost btn-sm" id="academy-close">✕ Close</button>
-        </div>
-        <div class="video-frame"><canvas id="academy-canvas" width="640" height="360"></canvas></div>
-        <div class="video-controls">
-          <button class="btn btn-sm" id="academy-play">▶ Play</button>
-          <div class="vc-progress" id="academy-progress"><div id="academy-progress-fill"></div></div>
-          <span style="font-family:var(--font-mono);font-size:12px;color:var(--text-dim)" id="academy-step-count">1 / 4</span>
-        </div>
-        <div class="step-list" id="academy-step-list"></div>
-      </div>
+       <div class="hidden" id="academy-player" style="margin-top:20px;">
+         <div id="drill-visual-container"></div>
+       </div>
     </section>
 
     <!-- ============================================================ -->
@@ -474,7 +465,11 @@
 <script src="js/game-fire.js"></script>
 <script src="js/game-pollution.js"></script>
 <script src="js/drills.js"></script>
-<script src="js/academy.js"></script>
+<script src="js/drill-visual-core.js"></script>
+<script src="js/drill-fire.js"></script>
+<script src="js/drill-flood.js"></script>
+<script src="js/drill-pollution.js"></script> 
+<script src="js/drills-visual-wire.js"></script>
 <script src="js/quiz.js"></script>
 <script src="js/performance.js"></script>
 <script src="js/app.js"></script>

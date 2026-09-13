@@ -1,0 +1,138 @@
+/* ==========================================================================
+   Interactive Drill Visualizers — shared component styles
+   Each hazard wraps its markup in <div class="dv-root theme-XXX"> which sets
+   --dv-accent / --dv-accent2 / --dv-bad. Every rule below reads those
+   variables, so one stylesheet serves all three distinct color themes.
+   ========================================================================== */
+
+.dv-root{
+  --dv-accent:#2fd9c4;
+  --dv-accent2:#f2a93b;
+  --dv-bad:#f0555c;
+  position:relative;
+  border-radius:14px;
+  padding:20px;
+  background:
+    radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--dv-accent) 16%, transparent), transparent 55%),
+    var(--bg-panel);
+  border:1px solid var(--border-soft);
+}
+
+.dv-root.theme-fire{        --dv-accent:#ff8a3d; --dv-accent2:#ffcf5c; --dv-bad:#ef4444; }
+.dv-root.theme-pollution{   --dv-accent:#22d3ee; --dv-accent2:#fbbf24; --dv-bad:#94a3b8; }
+.dv-root.theme-flood{       --dv-accent:#3b82f6; --dv-accent2:#ef4444; --dv-bad:#1d4ed8; }
+
+/* ---------- header row: title + live status badge ---------- */
+.dv-header{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+.dv-header h2{ font-family:var(--font-head); font-size:19px; margin:0 0 3px; }
+.dv-header .dv-sub{ color:var(--text-dim); font-size:13px; max-width:52ch; }
+
+.dv-status-badge{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:7px 14px; border-radius:20px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid color-mix(in srgb, var(--dv-accent) 55%, var(--border));
+  font-family:var(--font-mono); font-size:12px; font-weight:700; letter-spacing:0.3px;
+  color:var(--dv-accent);
+  white-space:nowrap;
+}
+.dv-status-badge .dot{ width:8px; height:8px; border-radius:50%; background:var(--dv-accent); box-shadow:0 0 8px var(--dv-accent); }
+.dv-status-badge.complete{ color:var(--safe); border-color:color-mix(in srgb, var(--safe) 55%, var(--border)); }
+.dv-status-badge.complete .dot{ background:var(--safe); box-shadow:0 0 8px var(--safe); }
+
+/* ---------- progress tracker ---------- */
+.dv-progress{ display:flex; align-items:center; gap:0; margin-bottom:18px; }
+.dv-progress .dv-step-btn{
+  flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:6px;
+  background:none; border:none; cursor:pointer; padding:4px 2px; position:relative; min-width:64px;
+}
+.dv-progress .dv-step-circle{
+  width:30px; height:30px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  border:2px solid var(--border); background:var(--bg-panel-2);
+  color:var(--text-dim); font-family:var(--font-mono); font-size:12px; font-weight:700;
+  transition:all .25s ease;
+}
+.dv-progress .dv-step-btn.active .dv-step-circle{ border-color:var(--dv-accent); color:var(--dv-accent); box-shadow:0 0 12px color-mix(in srgb, var(--dv-accent) 50%, transparent); }
+.dv-progress .dv-step-btn.done .dv-step-circle{ background:var(--dv-accent); border-color:var(--dv-accent); color:#04211d; }
+.dv-progress .dv-step-label{ font-size:10.5px; color:var(--text-dim); text-align:center; max-width:90px; }
+.dv-progress .dv-step-btn.active .dv-step-label{ color:var(--text); font-weight:600; }
+.dv-progress .dv-step-line{ flex:1; height:2px; background:var(--border); margin-top:15px; min-width:16px; }
+.dv-progress .dv-step-line.done{ background:var(--dv-accent); }
+
+/* ---------- main visual stage ---------- */
+.dv-stage{
+  position:relative;
+  min-height:280px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.035);
+  backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,0.08);
+  padding:22px;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+  margin-bottom:18px;
+}
+.dv-stage-inner{ width:100%; animation:dvFadeIn .35s ease; }
+@keyframes dvFadeIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
+
+.dv-stage-title{ font-family:var(--font-head); font-size:16px; font-weight:700; margin-bottom:6px; color:var(--dv-accent); }
+.dv-stage-desc{ color:var(--text-dim); font-size:13px; margin-bottom:16px; max-width:56ch; }
+
+/* ---------- tooltip ---------- */
+.dv-tip{ position:relative; display:inline-flex; }
+.dv-tip-btn{
+  width:18px; height:18px; border-radius:50%; border:1px solid var(--dv-accent); color:var(--dv-accent);
+  background:transparent; font-size:11px; font-weight:700; cursor:pointer; line-height:1;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+.dv-tip-pop{
+  position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+  width:220px; padding:10px 12px; border-radius:8px;
+  background:#0b0e16; border:1px solid var(--dv-accent);
+  color:var(--text); font-size:12px; line-height:1.4;
+  box-shadow:0 8px 24px rgba(0,0,0,0.5);
+  z-index:5;
+}
+.dv-tip-pop.hidden{ display:none; }
+
+/* ---------- nav controls ---------- */
+.dv-controls{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.dv-controls .dv-count{ font-family:var(--font-mono); font-size:12px; color:var(--text-dim); }
+.dv-btn{
+  padding:9px 16px; border-radius:8px; border:1px solid var(--border);
+  background:var(--bg-panel-2); color:var(--text); font-weight:700; font-size:13px; cursor:pointer;
+}
+.dv-btn:hover{ border-color:var(--text-faint); }
+.dv-btn:disabled{ opacity:0.4; cursor:not-allowed; }
+.dv-btn.primary{ background:var(--dv-accent); border-color:var(--dv-accent); color:#04211d; }
+
+/* ---------- do's / don'ts checklist ---------- */
+.dv-checklist{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:18px; }
+@media (max-width:640px){ .dv-checklist{ grid-template-columns:1fr; } }
+.dv-check-col h4{ font-size:12.5px; margin:0 0 8px; display:flex; align-items:center; gap:6px; }
+.dv-check-col.do h4{ color:var(--safe); }
+.dv-check-col.dont h4{ color:var(--dv-bad); }
+.dv-check-card{
+  display:flex; gap:8px; align-items:flex-start;
+  padding:9px 11px; border-radius:8px; margin-bottom:7px;
+  background:rgba(255,255,255,0.03); border:1px solid var(--border-soft);
+  font-size:12.5px; line-height:1.4;
+}
+.dv-check-col.do .dv-check-card{ border-left:3px solid var(--safe); }
+.dv-check-col.dont .dv-check-card{ border-left:3px solid var(--dv-bad); }
+
+/* ---------- generic animated icon helpers used inside stages ---------- */
+.dv-icon{ font-size:40px; line-height:1; display:inline-block; }
+.dv-pulse{ animation:dvPulse 1.6s ease-in-out infinite; }
+@keyframes dvPulse{ 0%,100%{ transform:scale(1); opacity:1; } 50%{ transform:scale(1.12); opacity:0.75; } }
+.dv-spin{ animation:dvSpin 2.4s linear infinite; display:inline-block; }
+@keyframes dvSpin{ from{transform:rotate(0);} to{transform:rotate(360deg);} }
+.dv-bounce-x{ animation:dvBounceX 1.8s ease-in-out infinite; }
+@keyframes dvBounceX{ 0%,100%{ transform:translateX(0);} 50%{ transform:translateX(18px);} }
+.dv-ring{
+  width:64px; height:64px; border-radius:50%;
+  border:2px solid var(--dv-accent); display:flex; align-items:center; justify-content:center;
+  box-shadow:0 0 20px color-mix(in srgb, var(--dv-accent) 45%, transparent);
+}
+.dv-close-btn{ position:absolute; top:14px; right:14px; }
