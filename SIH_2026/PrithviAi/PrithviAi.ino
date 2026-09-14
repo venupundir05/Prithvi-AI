@@ -1,4 +1,14 @@
 #include <DHT.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <ArduinoJson.h>
+
+const char* WIFI_SSID = "YOUR_WIFI_SSID";
+const char* WIFI_PASSWORD = "YOUR_WIFI_PASSWORD";
+const char* BACKEND_URL = "http://192.168.1.100:3000/api/readings";
+
+const unsigned long SEND_INTERVAL_MS = 5000;
+unsigned long lastSendMs = 0;
 
 // =====================================================
 // PIN DEFINITIONS
@@ -94,6 +104,64 @@ float getWaterDistance() {
   return distance;
 }
 
+void connectToWifi() {
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+
+  Serial.print("Connecting to WiFi");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println();
+  Serial.print("WiFi connected. IP: ");
+  Serial.println(WiFi.localIP());
+}
+
+void sendTelemetry(float temperature,
+                   float humidity,
+                   int mq2Raw,
+                   int mq135Raw,
+                   int rainRaw,
+                   int soilRaw,
+                   float waterDistance,
+                   float waterLevel,
+                   const String& floodStatus,
+                   const String& pollutionStatus,
+                   bool alert) {
+  if (WiFi.status() != WL_CONNECTED) {
+    connectToWifi();
+  }
+
+  StaticJsonDocument<512> payload;
+  payload["temperature"] = isnan(temperature) ? nullptr : temperature;
+  payload["humidity"] = isnan(humidity) ? nullptr : humidity;
+  payload["mq2Raw"] = mq2Raw;
+  payload["mq135Raw"] = mq135Raw;
+  payload["rainRaw"] = rainRaw;
+  payload["soilRaw"] = soilRaw;
+  payload["waterDistance"] = waterDistance >= 0 ? waterDistance : nullptr;
+  payload["waterLevel"] = waterLevel;
+  payload["floodStatus"] = floodStatus;
+  payload["pollutionStatus"] = pollutionStatus;
+  payload["alert"] = alert;
+
+  String body;
+  serializeJson(payload, body);
+
+  HTTPClient http;
+  http.begin(BACKEND_URL);
+  http.addHeader("Content-Type", "application/json");
+
+  int statusCode = http.POST(body);
+  Serial.print("HTTP POST status: ");
+  Serial.println(statusCode);
+  Serial.print("Payload: ");
+  Serial.println(body);
+
+  http.end();
+}
 
 // =====================================================
 // SETUP
@@ -113,6 +181,8 @@ void setup() {
 
   digitalWrite(BUZZER_PIN, LOW);
   digitalWrite(LED_PIN, LOW);
+
+  connectToWifi();
 
   Serial.println();
   Serial.println("==========================================");
@@ -498,6 +568,21 @@ void loop() {
 
 
   Serial.println("==========================================");
+
+  if (millis() - lastSendMs >= SEND_INTERVAL_MS) {
+    lastSendMs = millis();
+    sendTelemetry(temperature,
+                  humidity,
+                  mq2Raw,
+                  mq135Raw,
+                  rainRaw,
+                  soilRaw,
+                  waterDistance,
+                  waterLevel,
+                  floodStatus,
+                  pollutionStatus,
+                  alert);
+  }
 
   delay(2000);
 }

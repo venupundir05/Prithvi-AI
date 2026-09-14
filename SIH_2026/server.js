@@ -26,6 +26,55 @@ const latest = {
   }
 };
 
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function normalizePercent(rawValue, direction = 'inverse') {
+  const numeric = Number(rawValue);
+  if (!Number.isFinite(numeric)) return 0;
+
+  if (direction === 'direct') {
+    return clamp((numeric / 4095) * 100, 0, 100);
+  }
+
+  return clamp(((4095 - numeric) / 4095) * 100, 0, 100);
+}
+
+function normalizeTelemetry(payload = {}) {
+  const source = payload.source || 'esp32';
+
+  const mq2 = Number(payload.mq2 ?? payload.mq2Raw ?? 0);
+  const mq135 = Number(payload.mq135 ?? payload.mq135Raw ?? 0);
+
+  const rainRaw = Number(payload.rain ?? payload.rainRaw ?? 0);
+  const soilRaw = Number(payload.soil ?? payload.soilRaw ?? 0);
+
+  const waterLevelCm = Number(payload.water ?? payload.waterLevel ?? 0);
+  const waterPercent = Number.isFinite(waterLevelCm)
+    ? clamp((waterLevelCm / 9) * 100, 0, 100)
+    : normalizePercent(payload.water ?? payload.waterRaw ?? 0, 'inverse');
+
+  const normalized = {
+    mq2: Number.isFinite(mq2) ? mq2 : 0,
+    mq135: Number.isFinite(mq135) ? mq135 : 0,
+    rain: Number.isFinite(rainRaw) ? normalizePercent(rainRaw, 'inverse') : 0,
+    soil: Number.isFinite(soilRaw) ? normalizePercent(soilRaw, 'inverse') : 0,
+    water: Number.isFinite(waterPercent) ? waterPercent : 0,
+    source
+  };
+
+  if (payload.floodStatus) {
+    normalized.floodStatus = String(payload.floodStatus).toUpperCase();
+  }
+
+  if (payload.pollutionStatus) {
+    normalized.pollutionStatus = String(payload.pollutionStatus).toUpperCase();
+  }
+
+  return normalized;
+}
+
 function determineHazard(sensors) {
   const reasons = [];
   let score = 0;
@@ -75,12 +124,13 @@ function determineHazard(sensors) {
 }
 
 function updateReadings(sensors, source = 'esp32') {
+  const normalized = normalizeTelemetry({ ...sensors, source });
   latest.sensors = {
-    mq2: Number(sensors.mq2),
-    mq135: Number(sensors.mq135),
-    rain: Number(sensors.rain),
-    soil: Number(sensors.soil),
-    water: Number(sensors.water)
+    mq2: Number(normalized.mq2),
+    mq135: Number(normalized.mq135),
+    rain: Number(normalized.rain),
+    soil: Number(normalized.soil),
+    water: Number(normalized.water)
   };
   latest.hazard = determineHazard(latest.sensors);
   latest.source = source;
@@ -97,11 +147,16 @@ app.get('/api/readings', (_req, res) => {
 });
 
 app.post('/api/readings', (req, res) => {
-  const required = ['mq2', 'mq135', 'rain', 'soil', 'water'];
-  if (required.some((key) => !Number.isFinite(Number(req.body[key])))) {
-    return res.status(400).json({ error: 'Expected numeric mq2, mq135, rain, soil, and water fields.' });
+  const payload = req.body || {};
+  const normalized = normalizeTelemetry(payload);
+  const hasNumericSensorData = [normalized.mq2, normalized.mq135, normalized.rain, normalized.soil, normalized.water]
+    .every((value) => Number.isFinite(value));
+
+  if (!hasNumericSensorData) {
+    return res.status(400).json({ error: 'Expected numeric sensor fields or valid ESP32 raw readings.' });
   }
-  res.json(updateReadings(req.body, 'esp32'));
+
+  res.json(updateReadings(normalized, 'esp32'));
 });
 
 app.post('/api/simulate', (_req, res) => {
@@ -119,13 +174,18 @@ if (mqttUrl) {
   });
   mqttClient.on('message', (_topic, message) => {
     try {
-      updateReadings(JSON.parse(message.toString()), 'mqtt');
+      const parsed = JSON.parse(message.toString());
+      updateReadings(parsed, 'mqtt');
     } catch {
       console.error('Ignored malformed MQTT sensor message');
     }
   });
 }
 
-app.listen(port, () => {
-  console.log(`Hazard Route Command running at http://localhost:${port}`);
-});
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Hazard Route Command running at http://localhost:${port}`);
+  });
+}
+
+module.exports = { app, latest, normalizeTelemetry, determineHazard, updateReadings };
