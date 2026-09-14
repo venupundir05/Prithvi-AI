@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hazard Route Command</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div class="brand"><span class="brand-mark">⌁</span><div><p class="eyebrow">SIH 2026 / LIVE NETWORK</p><h1>Hazard Route Command</h1></div></div>
+        <div class="connection"><span class="pulse"></span><span id="connectionText">Connecting to ESP32 gateway</span><span class="mono" id="lastUpdated">--:--:--</span></div>
+      </header>
+
+      <section class="hero-grid">
+        <div class="hero-copy"><p class="eyebrow">ENVIRONMENTAL INTELLIGENCE</p><h2>Move people before<br /><em>the road turns risky.</em></h2><p class="lede">MQ sensors, rain, soil and water readings become one live hazard picture for faster rerouting.</p><button id="simulateButton" class="action-button">Simulate hazard <span>↗</span></button></div>
+        <div class="status-panel" id="statusPanel"><div class="status-label">CURRENT THREAT LEVEL</div><div class="status-row"><span class="status-dot"></span><strong id="hazardLevel">LOW</strong><span class="score" id="hazardScore">0 / 100</span></div><p id="hazardMessage">All monitored corridors are open.</p></div>
+      </section>
+
+      <section class="dashboard-grid">
+        <div class="map-wrap"><div class="map-heading"><div><p class="eyebrow">CORRIDOR OVERVIEW</p><h3>Live evacuation map</h3></div><div class="map-actions"><button class="recenter-button" id="recenterButton" type="button" title="Center map on Central Delhi">◎ <span>Center Delhi</span></button><span class="route-badge" id="routeBadge">ROUTE A · ACTIVE</span></div></div><div id="map"></div><div class="map-legend"><span><i class="legend-safe"></i> Clear</span><span><i class="legend-risk"></i> Reroute zone</span><span><i class="legend-you"></i> Field gateway</span></div></div>
+        <aside class="readings"><div class="map-heading"><div><p class="eyebrow">ESP32 TELEMETRY</p><h3>Sensor readings</h3></div><span class="mono">5 channels</span></div><div id="sensorGrid" class="sensor-grid"></div><div class="insight"><span class="insight-icon">!</span><div><strong id="insightTitle">System ready</strong><p id="insightText">Waiting for the next telemetry packet.</p></div></div></aside>
+      </section>
+    </main>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="/app.js"></script>
+  </body>
+</html>
