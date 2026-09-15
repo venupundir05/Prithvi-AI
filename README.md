@@ -17,9 +17,7 @@ Built for Smart India Hackathon (SIH) as a software-first prototype, ready for f
 - [Getting Started](#getting-started)
 - [How It Works](#how-it-works)
 - [Roadmap](#roadmap)
-- [Notes for Judges / Reviewers](#notes-for-judges--reviewers)
 
----
 
 ## Features
 
@@ -63,9 +61,7 @@ Aggregates every drill and quiz result into an overall score, a 5-part skill bre
 | Graphics | HTML5 Canvas 2D API (charts, sparklines, drill-game engine) |
 | Data | Simulated sensor engine + browser `localStorage` for progress |
 
-**No paid APIs. No paid assets. No build step. No backend required.** Everything runs client-side in the browser.
 
----
 
 ## Project Structure
 
